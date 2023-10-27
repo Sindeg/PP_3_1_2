@@ -1,6 +1,5 @@
 package ru.kata.springboot.dao;
 
-
 import ru.kata.springboot.model.User;
 
 import java.util.List;

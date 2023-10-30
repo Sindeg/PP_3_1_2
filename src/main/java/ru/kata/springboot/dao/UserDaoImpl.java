@@ -1,7 +1,6 @@
 package ru.kata.springboot.dao;
 
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.kata.springboot.model.User;
 
 import javax.persistence.EntityManager;
@@ -10,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-@Transactional
 public class UserDaoImpl implements UserDao {
 
     @PersistenceContext

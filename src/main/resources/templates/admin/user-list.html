@@ -6,30 +6,32 @@
     <title>All users</title>
 </head>
 <body>
-    <h2>Users</h2>
+    <h2>All users</h2>
     <table>
         <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
             <th>Email</th>
+            <th>Name</th>
             <th>Age</th>
+            <th>Roles</th>
         </tr>
         </thead>
         <tbody>
         <tr var="user" items="${users}">
         <tr th:each="user : ${users}">
             <td th:text="${user.id}"></td>
-            <td th:text="${user.name}"></td>
             <td th:text="${user.email}"></td>
+            <td th:text="${user.name}"></td>
             <td th:text="${user.age}"></td>
+            <td th:text="${user.roles}"></td>
             <td>
-                <form th:action="@{/users/edit}">
+                <form th:action="@{/admin/users/edit}">
                     <button type="submit" th:name="id" th:value="${user.id}">Edit</button>
                 </form>
             </td>
             <td>
-                <form method="post" th:action="@{/users/delete}">
+                <form method="post" th:action="@{/admin/users/delete}">
                     <button type="submit" th:name="id" th:value="${user.id}">Delete</button>
                 </form>
             </td>
@@ -37,6 +39,11 @@
         </tr>
         </tbody>
     </table>
-    <a href="/users/new">Create new user</a>
+    <a href="/admin/users/new">Create new user</a>
+    <a href="/user">User info</a>
+    <br/>
+    <form th:action="@{/logout}" method="POST">
+        <input type="submit" value="Logout"/>
+    </form>
 </body>
 </html>

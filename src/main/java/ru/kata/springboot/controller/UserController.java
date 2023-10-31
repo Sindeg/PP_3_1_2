@@ -3,21 +3,15 @@ package ru.kata.springboot.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.kata.springboot.model.User;
 import ru.kata.springboot.service.UserService;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import java.security.Principal;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -28,54 +22,10 @@ public class UserController {
     }
 
     @GetMapping
-    public String allUsers(Model model) {
-        List<User> users = userService.findAll();
-        model.addAttribute("users", users);
-        return "user/user-list";
-    }
+    public String getUserInfo(Principal principal, Model model) {
+        User user = userService.findByEmail(principal.getName()).orElse(new User());
+        model.addAttribute("user", user);
 
-    @GetMapping("/new")
-    public String createUserForm(@ModelAttribute("user") User user) {
-        return "user/user-create";
-    }
-
-    @PostMapping
-    public String createUser(@ModelAttribute("user") @Valid User user,
-                             BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "user/user-create";
-        }
-
-        userService.save(user);
-        return "redirect:/users";
-    }
-
-    @GetMapping("/edit")
-    public String editUserForm(@RequestParam("id") Long id, Model model) {
-        Optional<User> userById = userService.findById(id);
-
-        if (userById.isPresent()) {
-            model.addAttribute("user", userById.get());
-            return "user/edit-user";
-        } else {
-            return "redirect:/users";
-        }
-    }
-
-    @PostMapping("/edit")
-    public String editUser(@ModelAttribute("user") @Valid User user,
-                           BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "user/edit-user";
-        }
-
-        userService.updateUser(user);
-        return "redirect:/users";
-    }
-
-    @PostMapping("/delete")
-    public String deleteUser(@RequestParam("id") Long id) {
-        userService.deleteById(id);
-        return "redirect:/users";
+        return "/user/user-info";
     }
 }

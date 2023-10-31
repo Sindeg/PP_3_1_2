@@ -24,7 +24,7 @@
             <td th:text="${user.email}"></td>
             <td th:text="${user.name}"></td>
             <td th:text="${user.age}"></td>
-            <td th:text="${user.roles}"></td>
+            <td th:text="${#strings.listJoin(user.roles, ', ')}"></td>
             <td>
                 <form th:action="@{/admin/users/edit}">
                     <button type="submit" th:name="id" th:value="${user.id}">Edit</button>

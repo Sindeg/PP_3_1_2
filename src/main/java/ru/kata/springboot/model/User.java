@@ -46,7 +46,6 @@ public class User implements UserDetails {
     private Integer age;
 
     @Column(name = "password", nullable = false)
-    @Size(min = 2, max = 60, message = "Password should be between 2 and 60 chars")
     private String password;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)

@@ -1,6 +1,7 @@
 package ru.kata.springboot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,11 +26,15 @@ public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Autowired
     public AdminController(UserService userService,
-                           RoleService roleService) {
+                           RoleService roleService,
+                           PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/users")
@@ -70,13 +75,19 @@ public class AdminController {
     }
 
     @PatchMapping("/users/edit")
-    public String editUser(@ModelAttribute("user") @Valid User user,
+    public String editUser(@ModelAttribute("user") @Valid User updatedUser,
                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/admin/edit-user";
         }
 
-        userService.updateUser(user);
+        User user = userService.findById(updatedUser.getId()).get();
+
+        if (!updatedUser.getPassword().equals(user.getPassword())) {
+            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+
+        userService.updateUser(updatedUser);
         return "redirect:/admin/users";
     }
 

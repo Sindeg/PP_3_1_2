@@ -7,7 +7,7 @@
 </head>
 <body>
     <h2>Edit user</h2>
-    <form th:action="@{/admin/users/edit}" th:object="${user}" method="POST">
+    <form th:action="@{/admin/users/edit}" th:object="${user}" th:method="patch">
         <input name="id" th:field="*{id}" th:value="${user.id}" hidden="hidden">
 
         <label for="email">Email</label>

@@ -82,9 +82,12 @@ public class AdminController {
         }
 
         User user = userService.findById(updatedUser.getId()).get();
+        String newPassword = updatedUser.getPassword();
 
-        if (!updatedUser.getPassword().equals(user.getPassword())) {
-            updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        if (!newPassword.equals(user.getPassword()) && !newPassword.isEmpty()) {
+            updatedUser.setPassword(passwordEncoder.encode(newPassword));
+        } else {
+            updatedUser.setPassword(user.getPassword());
         }
 
         userService.updateUser(updatedUser);

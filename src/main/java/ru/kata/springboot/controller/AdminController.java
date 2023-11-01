@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import ru.kata.springboot.model.Role;
 import ru.kata.springboot.model.User;
 import ru.kata.springboot.service.RoleService;
 import ru.kata.springboot.service.UserService;
@@ -55,11 +54,6 @@ public class AdminController {
                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/admin/user-create";
-        }
-
-        if (user.getRoles().isEmpty()) {
-            Role role = roleService.findByName("ROLE_USER").get();
-            user.getRoles().add(role);
         }
 
         userService.save(user);

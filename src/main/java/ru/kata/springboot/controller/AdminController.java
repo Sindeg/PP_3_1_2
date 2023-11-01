@@ -1,7 +1,6 @@
 package ru.kata.springboot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,14 +25,11 @@ public class AdminController {
     private final UserService userService;
     private final RoleService roleService;
 
-    private final PasswordEncoder passwordEncoder;
-
     @Autowired
     public AdminController(UserService userService,
-                           RoleService roleService, PasswordEncoder passwordEncoder) {
+                           RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/users")
@@ -65,7 +61,6 @@ public class AdminController {
         Optional<User> userById = userService.findById(id);
 
         if (userById.isPresent()) {
-            User user = userById.get();
             model.addAttribute("user", userById.get());
             model.addAttribute("listRoles", roleService.findAll());
             return "/admin/edit-user";

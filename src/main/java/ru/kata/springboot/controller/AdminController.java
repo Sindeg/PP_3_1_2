@@ -85,7 +85,7 @@ public class AdminController {
     public String editUser(@ModelAttribute("user") @Valid User updatedUser,
                            BindingResult bindingResult, Model model) {
         Optional<User> userByEmail = userService.findByEmail(updatedUser.getEmail());
-        if (userByEmail.isPresent()) {
+        if (userByEmail.isPresent() && (!userByEmail.get().getId().equals(updatedUser.getId()))) {
             bindingResult.rejectValue("email", "error.email",
                     "This email is already in use");
         }
@@ -93,15 +93,6 @@ public class AdminController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("listRoles", roleService.findAll());
             return "/admin/edit-user";
-        }
-
-        User user = userService.findById(updatedUser.getId()).get();
-        String newPassword = updatedUser.getPassword();
-
-        if (!newPassword.equals(user.getPassword()) && !newPassword.isEmpty()) {
-            updatedUser.setPassword(passwordEncoder.encode(newPassword));
-        } else {
-            updatedUser.setPassword(user.getPassword());
         }
 
         userService.updateUser(updatedUser);

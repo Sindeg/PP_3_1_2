@@ -52,12 +52,19 @@ public class AdminController {
 
     @PostMapping("/users")
     public String createUser(@ModelAttribute("user") @Valid User user,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult, Model model) {
+        Optional<User> userByEmail = userService.findByEmail(user.getEmail());
+        if (userByEmail.isPresent()) {
+            bindingResult.rejectValue("email", "error.email",
+                    "This email is already in use");
+        }
+
         if (bindingResult.hasErrors()) {
+            model.addAttribute("listRoles", roleService.findAll());
             return "/admin/user-create";
         }
 
-        userService.save(user);
+        this.userService.save(user);
         return "redirect:/admin/users/";
     }
 
@@ -76,8 +83,15 @@ public class AdminController {
 
     @PatchMapping("/users/edit")
     public String editUser(@ModelAttribute("user") @Valid User updatedUser,
-                           BindingResult bindingResult) {
+                           BindingResult bindingResult, Model model) {
+        Optional<User> userByEmail = userService.findByEmail(updatedUser.getEmail());
+        if (userByEmail.isPresent()) {
+            bindingResult.rejectValue("email", "error.email",
+                    "This email is already in use");
+        }
+
         if (bindingResult.hasErrors()) {
+            model.addAttribute("listRoles", roleService.findAll());
             return "/admin/edit-user";
         }
 

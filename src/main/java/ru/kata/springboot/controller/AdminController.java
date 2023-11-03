@@ -110,7 +110,9 @@ public class AdminController {
 
     @DeleteMapping("/users/delete")
     public String deleteUser(@RequestParam("id") Long id) {
-        userService.deleteById(id);
+        if (userService.findById(id).isPresent()) {
+            userService.deleteById(id);
+        }
         return "redirect:/admin/users";
     }
 }

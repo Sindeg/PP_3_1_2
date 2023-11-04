@@ -1,10 +1,11 @@
 package ru.kata.springboot.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.springboot.dao.UserDao;
 import ru.kata.springboot.model.User;
+import ru.kata.springboot.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,38 +14,55 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
-    private final UserDao userDao;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDao userDao) {
-        this.userDao = userDao;
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     @Override
-    public void save(User user) {
-        userDao.save(user);
+    public User save(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     @Override
     public List<User> findAll() {
-        return userDao.findAll();
+        return userRepository.findAll();
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        return userDao.findById(id);
+        return userRepository.findById(id);
     }
 
     @Transactional
     @Override
-    public void updateUser(User user) {
-        userDao.updateUser(user);
+    public void updateUser(User updatedUser) {
+        User user = findById(updatedUser.getId()).get();
+        String newPassword = updatedUser.getPassword();
+
+        if (!newPassword.equals(user.getPassword()) && !newPassword.isEmpty()) {
+            updatedUser.setPassword(passwordEncoder.encode(newPassword));
+        } else {
+            updatedUser.setPassword(user.getPassword());
+        }
+
+        userRepository.save(updatedUser);
     }
 
     @Transactional
     @Override
     public void deleteById(Long id) {
-        userDao.deleteById(id);
+        userRepository.deleteById(id);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 }

@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    void save(User user);
+
+    User save(User user);
 
     List<User> findAll();
 
@@ -15,4 +16,6 @@ public interface UserService {
     void updateUser(User user);
 
     void deleteById(Long id);
+
+    Optional<User> findByEmail(String email);
 }

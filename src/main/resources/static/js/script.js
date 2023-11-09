@@ -10,8 +10,6 @@ const addNewUserForm = document.getElementById('add-new-user-form')
 refreshTable()
 
 function refreshTable() {
-    console.log('loading users...')
-    // Отправка GET-запроса и обработка полученного JSON
     fetch(BASE_URL + '/users')
         .then(response => response.json())
         .then(data => {
@@ -20,7 +18,6 @@ function refreshTable() {
         .catch(error => {
             console.error('Произошла ошибка:', error);
         });
-    console.log('Users was loaded...')
 }
 
 function fillTableWithData(data) {
@@ -32,10 +29,8 @@ function fillTableWithData(data) {
 
     // Перебор каждого объекта пользователя в JSON
     data.forEach(user => {
-        // Создание новой строки в таблице
         const row = tbody.insertRow();
 
-        // Заполнение ячеек строки данными из объекта пользователя
         row.insertCell().textContent = user.id;
         row.insertCell().textContent = user.email;
         row.insertCell().textContent = user.name;
@@ -44,17 +39,13 @@ function fillTableWithData(data) {
         const roles = user.roles.map(role => role.name.split('_')[1])
         row.insertCell().textContent = roles.join(' ');
 
-        // Создание кнопки "Редактировать"
         const editButton = document.createElement('button');
         editButton.textContent = 'Edit';
         editButton.classList.add('btn')
         editButton.classList.add('btn-info')
         editButton.addEventListener('click', event => {showEditForm(event);});
-        // editButton.setAttribute('data-bs-toggle', 'modal');
-        // editButton.setAttribute('data-bs-target', '#edit-user-modal');
         row.insertCell().appendChild(editButton);
 
-        // Создание кнопки "Удалить"
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
         deleteButton.classList.add('btn')
@@ -102,7 +93,6 @@ function showEditForm (event) {
 
 deleteUserForm.addEventListener('submit', event => {
     console.log('Нажата кнопка delete формы удаления юзера');
-    // Предотвращение отправки формы
     event.preventDefault();
 
     const userId = document.getElementById('delete-user-id').value
@@ -123,7 +113,7 @@ deleteUserForm.addEventListener('submit', event => {
             }
         })
         .catch(error => {
-            console.log('Ошибка ', error)
+            console.log('Ошибка при удалении пользователя', error)
         })
 
     let modal = bootstrap.Modal.getInstance(modalDeleteUser);
@@ -132,7 +122,6 @@ deleteUserForm.addEventListener('submit', event => {
 
 editUserForm.addEventListener('submit', event => {
     console.log('Нажата кнопка submit формы редактирования юзера');
-    // Предотвращение отправки формы
     event.preventDefault();
 
     const email = document.getElementById('edited-user-email').value;
@@ -161,7 +150,7 @@ editUserForm.addEventListener('submit', event => {
 
     const URL = BASE_URL + '/user/edit/';
     console.log('PATCH запрос на URL ', URL)
-    // Отправляем DELETE запрос
+
     fetch(URL, options)
         .then(response => {
             if (response.ok) {
@@ -187,13 +176,11 @@ editUserForm.addEventListener('submit', event => {
         })
 
     let modal = bootstrap.Modal.getInstance(modalEditUser);
-    console.log('закрытие модального окна редактирования юзера')
     modal.hide()
 });
 
 addNewUserForm.addEventListener('submit', event => {
     console.log('Нажата кнопка add формы добавления юзера');
-    // Предотвращение отправки формы
     event.preventDefault();
 
     const email = document.getElementById('new-user-email').value;
@@ -230,7 +217,6 @@ addNewUserForm.addEventListener('submit', event => {
                 refreshTable()
             } else {
                 response.json().then(json => {
-                    // TODO: выводить ошибку
                     console.log('Произошла ошибка при добавлении юзера')
                     console.log('Полученный json', json)
                     showAlert('Error while add new user', 'alert-danger',  'user-added-error-alert')
@@ -248,10 +234,6 @@ addNewUserForm.addEventListener('submit', event => {
 });
 
 function showAlert(message, cssStyle, alertId) {
-    console.log('Формирование алерта об ошибки при создании юзера')
-    // const oldAlert = document.getElementById('alert-delete-user')
-    // oldAlert?.remove()
-
     const alert = document.createElement('div')
     alert.setAttribute('id', alertId)
     alert.classList.add('alert', 'alert-dismissible', 'fade', 'show')
@@ -275,8 +257,6 @@ function showAlert(message, cssStyle, alertId) {
     alert.appendChild(closeButton)
 
     document.body.insertBefore(alert, document.getElementById('base-container'))
-
-    console.log('Алерт создан')
 
     setTimeout(() => document.getElementById(alertId).remove(), 10_000)
 }

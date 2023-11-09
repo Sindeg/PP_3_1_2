@@ -37,7 +37,7 @@ public class ApiController {
         return userService.findAll();
     }
 
-    @PostMapping("/user")
+    @PostMapping("/users")
     public ResponseEntity<HttpStatus> createUser(@RequestBody @Valid User user,
                                                  BindingResult bindingResult) {
         Optional<User> userByEmail = userService.findByEmail(user.getEmail());
@@ -57,7 +57,7 @@ public class ApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PatchMapping("/user/edit")
+    @PatchMapping("/users")
     public ResponseEntity<HttpStatus> editUser(@RequestBody @Valid User user,
                                                BindingResult bindingResult) {
         Optional<User> userByEmail = userService.findByEmail(user.getEmail());
@@ -77,7 +77,7 @@ public class ApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/user/delete/{id}")
+    @DeleteMapping("/users/{id}")
     public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id) {
         userService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);

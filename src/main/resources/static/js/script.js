@@ -97,7 +97,7 @@ deleteUserForm.addEventListener('submit', event => {
 
     const userId = document.getElementById('delete-user-id').value
 
-    const URL = BASE_URL + '/user/delete/' + userId;
+    const URL = BASE_URL + '/users/' + userId;
     console.log('DELETE запрос на URL ', URL)
     // Отправляем DELETE запрос
     fetch(URL, {method: 'DELETE', credentials: 'include'})
@@ -148,7 +148,7 @@ editUserForm.addEventListener('submit', event => {
         body: JSON.stringify(userData)
     }
 
-    const URL = BASE_URL + '/user/edit/';
+    const URL = BASE_URL + '/users';
     console.log('PATCH запрос на URL ', URL)
 
     fetch(URL, options)
@@ -206,7 +206,7 @@ addNewUserForm.addEventListener('submit', event => {
         body: JSON.stringify(userData)
     }
 
-    const URL = BASE_URL + '/user';
+    const URL = BASE_URL + '/users';
     console.log('POST запрос на URL ', URL)
 
     fetch(URL, options)
